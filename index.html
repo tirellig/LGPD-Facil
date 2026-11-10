@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LGPDFácil — MVP</title>
+<style>
+:root{
+  --bg:#f5f7f6; --card:#fff; --ink:#1b2a26; --muted:#5d6f69; --line:#dfe6e3;
+  --brand:#0f766e; --brand-2:#14b8a6; --brand-soft:#e6f4f2;
+  --alta:#b42318; --alta-soft:#fdecea; --media:#b54708; --media-soft:#fef3e2;
+  --cont:#175cd3; --cont-soft:#eaf1fd; --ok:#067647; --ok-soft:#e7f6ee;
+  --radius:12px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header.top{background:var(--brand);color:#fff;padding:14px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header.top .logo{font-weight:800;font-size:20px;letter-spacing:-.3px}
+header.top .logo span{color:#99f6e4}
+header.top .tag{opacity:.85;font-size:13px}
+header.top .sp{flex:1}
+header.top button{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.35)}
+.wrap{max-width:1100px;margin:0 auto;padding:20px 16px 60px;display:grid;grid-template-columns:230px 1fr;gap:20px}
+nav.steps{position:sticky;top:16px;align-self:start;background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:10px}
+nav.steps button{display:flex;width:100%;text-align:left;gap:10px;align-items:center;background:none;border:0;padding:9px 10px;border-radius:8px;color:var(--muted);font-size:14px;cursor:pointer}
+nav.steps button .n{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--line);color:var(--ink);font-size:12px;font-weight:700;flex:none}
+nav.steps button.done .n{background:var(--brand-2);color:#fff}
+nav.steps button.on{background:var(--brand-soft);color:var(--brand);font-weight:600}
+nav.steps button.on .n{background:var(--brand);color:#fff}
+.timer{font-size:12px;color:var(--muted);padding:8px 10px 2px;border-top:1px solid var(--line);margin-top:6px}
+main{min-width:0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin-bottom:16px}
+h1{font-size:26px;margin:0 0 6px;letter-spacing:-.4px}
+h2{font-size:20px;margin:0 0 4px}
+h3{font-size:16px;margin:18px 0 8px}
+.sub{color:var(--muted);margin:0 0 18px}
+label.f{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
+input[type=text],input[type=number],input[type=date],select,textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+textarea{min-height:80px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer;user-select:none;font-size:14px;background:#fff}
+.chip.on{background:var(--brand);border-color:var(--brand);color:#fff}
+button{font:inherit;cursor:pointer;border-radius:8px;padding:9px 16px;border:1px solid var(--line);background:#fff;color:var(--ink)}
+button.pri{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+button.pri:hover{background:#0c5f59}
+button.ghost{background:none;border-color:transparent;color:var(--brand)}
+button.sm{padding:5px 10px;font-size:13px}
+.actions{display:flex;justify-content:space-between;gap:10px;margin-top:22px;flex-wrap:wrap}
+.q{border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:10px}
+.q .t{font-weight:600}
+.q .h{color:var(--muted);font-size:13px;margin:2px 0 10px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0;padding:6px 14px;font-size:14px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button.on{background:var(--brand);color:#fff}
+.seg button.on.no{background:var(--alta)}
+.seg button.on.part{background:var(--media)}
+.callout{border-radius:10px;padding:14px 16px;margin:14px 0;border-left:4px solid var(--brand);background:var(--brand-soft)}
+.callout.warn{border-color:var(--media);background:var(--media-soft)}
+.callout.bad{border-color:var(--alta);background:var(--alta-soft)}
+.callout.ok{border-color:var(--ok);background:var(--ok-soft)}
+.callout b{display:block;margin-bottom:2px}
+.hero{display:grid;grid-template-columns:1.3fr 1fr;gap:22px;align-items:center}
+.flow{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0}
+.flow span{background:var(--brand-soft);color:var(--brand);padding:4px 10px;border-radius:999px;font-size:13px;font-weight:600}
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.pillar{border:1px solid var(--line);border-radius:10px;padding:14px}
+.pillar b{display:block;margin-bottom:4px}
+.pillar p{margin:0;color:var(--muted);font-size:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);font-weight:700}
+.tbl{overflow-x:auto}
+.badge{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.b-alta{background:var(--alta-soft);color:var(--alta)}
+.b-media{background:var(--media-soft);color:var(--media)}
+.b-cont{background:var(--cont-soft);color:var(--cont)}
+.b-ok{background:var(--ok-soft);color:var(--ok)}
+.b-rev{background:var(--media-soft);color:var(--media)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:6px 0 4px}
+.kpi{border:1px solid var(--line);border-radius:10px;padding:14px}
+.kpi .v{font-size:26px;font-weight:800;letter-spacing:-.5px}
+.kpi .l{font-size:13px;color:var(--muted)}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--brand-2)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:4px 0 16px;flex-wrap:wrap}
+.tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;color:var(--muted);padding:9px 12px}
+.tabs button.on{color:var(--brand);border-color:var(--brand);font-weight:600}
+.doc{white-space:pre-wrap;background:#fafbfb;border:1px solid var(--line);border-radius:10px;padding:16px;font-size:14px;max-height:460px;overflow:auto}
+td.done{text-decoration:line-through;color:var(--muted)}
+td input[type=text],td input[type=date]{padding:5px 7px;font-size:13px;min-width:110px}
+.forn{display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px}
+.stars button{border:0;background:none;font-size:24px;padding:0 3px;color:#c9d3cf}
+.stars button.on{color:#f5a524}
+footer.disc{max-width:1100px;margin:0 auto;padding:0 16px 30px;color:var(--muted);font-size:12.5px}
+.muted{color:var(--muted)}
+.print-only{display:none}
+@media (max-width:820px){
+  .wrap{grid-template-columns:1fr}
+  nav.steps{position:static;display:flex;overflow-x:auto;gap:4px;padding:6px}
+  nav.steps button{width:auto;white-space:nowrap}
+  nav.steps button .lbl{display:none}
+  nav.steps button.on .lbl{display:inline}
+  .timer{display:none}
+  .hero,.row,.pillars{grid-template-columns:1fr}
+  .kpis{grid-template-columns:1fr 1fr}
+  .forn{grid-template-columns:1fr 1fr}
+}
+@media print{
+  header.top,nav.steps,.actions,.tabs,.no-print,footer.disc{display:none!important}
+  .wrap{display:block;padding:0}
+  .card{border:0;padding:0 0 10px}
+  body{background:#fff}
+  .print-only{display:block}
+  .doc{max-height:none;border:0;padding:0}
+  .tabpane{display:block!important;page-break-inside:auto}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="logo">LGPD<span>Fácil</span></div>
+  <div class="tag">LGPD guiada para pequenos negócios · protótipo MVP</div>
+  <div class="sp"></div>
+  <button class="sm" id="btnDemo">Carregar exemplo</button>
+  <button class="sm" id="btnReset">Recomeçar</button>
+</header>
+
+<div class="wrap">
+  <nav class="steps" id="steps"></nav>
+  <main id="app"></main>
+</div>
+<footer class="disc">
+  A LGPDFácil é uma ferramenta de orientação, organização e execução guiada. Não é parecer jurídico, não emite certificação e não garante “conformidade total”.
+  Referencial: Resolução CD/ANPD nº 2/2022 (com alterações da Resolução CD/ANPD nº 15/2024) e Guia de Segurança da ANPD para agentes de pequeno porte.
+  Os dados ficam salvos somente neste navegador.
+</footer>
+
+<script>
+/* ============ Conteúdo ============ */
+const STEPS = [
+  {id:'inicio', lbl:'Início'},
+  {id:'perfil', lbl:'Perfil da empresa'},
+  {id:'enq', lbl:'Enquadramento'},
+  {id:'diag', lbl:'Diagnóstico'},
+  {id:'seg', lbl:'Segurança mínima'},
+  {id:'forn', lbl:'Fornecedores'},
+  {id:'res', lbl:'Plano e documentos'},
+];
+
+const CANAIS = ['Loja física','WhatsApp','Instagram/Facebook','Site','Aplicativo','E-mail','Telefone','Marketplace'];
+
+const CRIT_ESPECIFICOS = [
+  {id:'emergentes', t:'Uso de tecnologias emergentes ou inovadoras (ex.: reconhecimento facial, IA)'},
+  {id:'vigilancia', t:'Vigilância ou controle de áreas acessíveis ao público (ex.: câmeras na loja)'},
+  {id:'automatizadas', t:'Decisões tomadas só por sistemas automatizados (ex.: aprovação de crédito, perfil de consumo)'},
+  {id:'sensiveis', t:'Dados sensíveis (saúde, biometria, religião, etc.) ou de crianças, adolescentes ou idosos'},
+];
+
+const DIAG = [
+  {id:'clientes', t:'Você pede nome, CPF, telefone ou endereço de clientes?', h:'Ex.: cadastro, venda, entrega, nota fiscal, crediário.'},
+  {id:'marketing', t:'Você usa WhatsApp, e-mail ou SMS para divulgar promoções?', h:'Inclui listas de transmissão e grupos de clientes.'},
+  {id:'funcionarios', t:'Você tem funcionários ou prestadores de serviço?', h:'Folha, benefícios, ponto, exames admissionais.'},
+  {id:'criancas', t:'Seu negócio atende crianças ou adolescentes e guarda dados deles?', h:'Ex.: escola, curso, clínica, loja infantil com cadastro.'},
+  {id:'cameras', t:'Há câmeras em áreas abertas ao público?', h:'Loja, recepção, estacionamento.'},
+  {id:'sensiveis', t:'Você guarda dados de saúde, biometria, religião ou outros dados sensíveis?', h:'Ex.: ficha de anamnese, ponto por digital, atestados.'},
+  {id:'site', t:'Você tem site ou aplicativo com formulário, login ou cookies de anúncios?', h:'Ex.: formulário de contato, Google Analytics, Pixel do Facebook.'},
+  {id:'canal', t:'Existe um canal (e-mail ou WhatsApp) para clientes pedirem acesso, correção ou exclusão dos dados?', h:'É exigido mesmo para pequenas empresas sem encarregado (art. 11 da Res. 2/2022).'},
+  {id:'aviso', t:'Você tem um aviso de privacidade publicado (site, balcão ou redes)?', h:'Texto que explica quais dados você coleta e por quê.'},
+  {id:'focal', t:'Existe uma pessoa definida como responsável por privacidade na empresa?', h:'Não precisa ser DPO formal — um ponto focal já ajuda.'},
+  {id:'descarte', t:'Você sabe por quanto tempo guarda os dados e quando os descarta?', h:'Ex.: fichas antigas, planilhas, conversas de WhatsApp.'},
+];
+
+const SEG = [
+  {id:'acesso', t:'Controle de acesso', q:'Somente as pessoas necessárias acessam dados de RH, financeiro e cadastros?'},
+  {id:'2fa', t:'Autenticação', q:'As contas importantes (e-mail, banco, sistema, redes sociais) usam senha forte e verificação em duas etapas (2FA)?'},
+  {id:'atualizacao', t:'Atualizações e antivírus', q:'Computadores, celulares e sistemas estão atualizados e com antivírus?'},
+  {id:'backup', t:'Backup', q:'Existe cópia periódica dos dados e vocês já testaram recuperar essa cópia?'},
+  {id:'treinamento', t:'Treinamento', q:'A equipe sabe reconhecer golpes (phishing) e evita enviar dados para pessoas erradas?'},
+];
+
+const TIPOS_FORN = ['Contabilidade','TI / suporte','Sistema de vendas / ERP','RH / folha / benefícios','Marketing / agência','Nuvem / hospedagem','Pagamentos','Transporte / entregas','Outro'];
+
+/* ============ Estado ============ */
+const KEY = 'lgpdfacil-mvp-v1';
+const blank = () => ({
+  step:0, start:null, firstPlanAt:null, tab:'plano',
+  perfil:{nome:'',setor:'',colab:'',canais:[],sistemas:''},
+  enq:{porte:'',receita:'',grupo:'',larga:'',afeta:'',crit:[]},
+  diag:{}, seg:{}, forn:[], plano:{}, nota:0, comentario:''
+});
+let S = load();
+function load(){ try{ const r = localStorage.getItem(KEY); if(r) return Object.assign(blank(), JSON.parse(r)); }catch(e){} return blank(); }
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+function esc(s){ return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+const nomeEmp = () => S.perfil.nome.trim() || 'Sua empresa';
+
+/* ============ Lógica de negócio ============ */
+function enquadramento(){
+  const e = S.enq;
+  const altoRisco = (e.larga==='sim' || e.afeta==='sim') && e.crit.length>0;
+  const motivos = [];
+  if(e.porte==='outro') motivos.push('O porte informado (média ou grande empresa) não está entre os agentes de pequeno porte da Resolução.');
+  if(e.receita==='sim') motivos.push('A receita bruta ultrapassa o limite do porte declarado.');
+  if(e.grupo==='sim') motivos.push('A empresa pertence a grupo econômico cuja receita global excede os limites.');
+  if(altoRisco) motivos.push('Há sinais de tratamento de alto risco: pelo menos um critério geral (larga escala ou impacto significativo) somado a um critério específico.');
+  const completo = e.porte && e.receita && e.grupo && e.larga && e.afeta;
+  let status = 'pendente';
+  if(completo) status = motivos.length ? 'nao' : (e.crit.length ? 'atencao' : 'sim');
+  return {status, motivos, altoRisco, completo};
+}
+
+function inventario(){
+  const d = S.diag, ops = [];
+  const add = o => ops.push(o);
+  if(d.clientes==='sim') add({op:'Cadastro, vendas e entregas', tit:'Clientes', dados:'Nome, CPF, telefone, endereço', fin:'Realizar vendas, entregas e emitir nota fiscal', base:'Execução de contrato (art. 7º, V) e cumprimento de obrigação legal/fiscal (art. 7º, II)', comp:'Contabilidade, sistema de vendas, transportadora', ret:'5 anos para documentos fiscais', rev:false});
+  if(d.marketing==='sim') add({op:'Divulgação de promoções', tit:'Clientes e contatos', dados:'Nome, telefone, e-mail', fin:'Enviar ofertas e novidades', base:'Consentimento (art. 7º, I) ou legítimo interesse (art. 7º, IX) — revisar qual se aplica', comp:'Plataforma de envio, agência de marketing', ret:'Até o cliente pedir para sair da lista', rev:true});
+  if(d.funcionarios==='sim') add({op:'Gestão de pessoas (RH e folha)', tit:'Funcionários e prestadores', dados:'Documentos pessoais, dados bancários, dependentes, atestados', fin:'Pagamento, benefícios, obrigações trabalhistas e previdenciárias', base:'Obrigação legal (art. 7º, II) e execução de contrato (art. 7º, V); atestados são dados sensíveis (art. 11)', comp:'Contabilidade, eSocial, operadora de benefícios', ret:'Conforme legislação trabalhista e previdenciária', rev:false});
+  if(d.cameras==='sim') add({op:'Videomonitoramento', tit:'Clientes, visitantes e funcionários', dados:'Imagens', fin:'Segurança do estabelecimento e das pessoas', base:'Legítimo interesse (art. 7º, IX) — avaliar proporcionalidade e transparência', comp:'Empresa de segurança (se houver)', ret:'Sugestão: até 30 dias, salvo incidente', rev:true});
+  if(d.site==='sim') add({op:'Site / aplicativo', tit:'Visitantes e usuários', dados:'Formulários, login, cookies, IP', fin:'Contato, cadastro e medição de audiência/anúncios', base:'Execução de contrato para cadastro; consentimento para cookies não essenciais', comp:'Hospedagem, ferramentas de analytics e anúncios', ret:'Definir por finalidade', rev:true});
+  if(d.criancas==='sim') add({op:'Dados de crianças e adolescentes', tit:'Crianças, adolescentes e responsáveis', dados:'Nome, idade, dados escolares/saúde', fin:'Prestação do serviço', base:'Melhor interesse da criança (art. 14) — exige revisão especializada', comp:'A mapear', ret:'A definir com especialista', rev:true, esc:true});
+  if(d.sensiveis==='sim') add({op:'Dados sensíveis', tit:'Clientes e/ou funcionários', dados:'Saúde, biometria ou outros dados sensíveis', fin:'A detalhar', base:'Hipóteses do art. 11 — exige revisão especializada', comp:'A mapear', ret:'A definir com especialista', rev:true, esc:true});
+  return ops;
+}
+
+function tarefas(){
+  const d=S.diag, s=S.seg, T=[], enq=enquadramento();
+  const pend = v => v!=='sim';
+  const add = (id,prio,titulo,porque,evid,esforco='Baixo') => T.push({id,prio,titulo,porque,evid,esforco});
+  if(pend(d.canal)) add('canal','alta','Criar canal de atendimento ao titular','Obrigatório quando não há encarregado (art. 11 da Res. 2/2022).','E-mail/WhatsApp divulgado no aviso de privacidade');
+  if(pend(s.acesso)) add('acesso','alta',(s.acesso==='parcial'?'Concluir: ':'')+'Restringir acesso a dados de RH, financeiro e cadastros','Acesso amplo é a causa mais comum de vazamentos internos.','Lista de quem acessa cada pasta/sistema');
+  if(pend(s['2fa'])) add('2fa','alta',(s['2fa']==='parcial'?'Concluir: ':'')+'Habilitar 2FA nas contas críticas','Contas de e-mail, banco e redes sem 2FA são alvo fácil de golpes.','Print das configurações de 2FA ativas');
+  if(enq.altoRisco || d.criancas==='sim' || d.sensiveis==='sim') add('altorisco','alta','Revisar tratamento de alto risco com especialista','Dados sensíveis, de crianças ou alto risco pedem análise profissional.','Parecer ou registro da revisão','Médio');
+  if(pend(d.focal)) add('focal','media','Definir ponto focal de privacidade','Alguém precisa responder pelo tema, mesmo sem DPO formal.','Nome e contato registrados');
+  if(pend(d.aviso)) add('aviso','media','Publicar aviso de privacidade','Transparência sobre quais dados são coletados e por quê.','Aviso publicado (rascunho gerado na aba Documentos)');
+  if(d.marketing==='sim') add('mkt','media','Revisar base legal do marketing e incluir opção de descadastro','Envio de promoções exige finalidade clara e opt-out fácil.','Mensagem padrão com "responda SAIR"');
+  if(d.cameras==='sim') add('cam','media','Fixar aviso de câmeras e definir prazo das gravações','Transparência e retenção proporcional.','Placa na entrada + prazo de exclusão configurado');
+  if(pend(s.backup)) add('backup','media',(s.backup==='parcial'?'Concluir: ':'')+'Formalizar rotina de backup e testar recuperação','Sem backup, um ransomware pode parar o negócio.','Registro da rotina e do último teste');
+  if(pend(s.atualizacao)) add('atual','media',(s.atualizacao==='parcial'?'Concluir: ':'')+'Ativar atualizações automáticas e antivírus','Sistemas desatualizados têm falhas conhecidas.','Checklist mensal assinado');
+  if(pend(d.descarte)) add('descarte','media','Definir prazos de guarda e descarte dos dados','Guardar dados além do necessário aumenta o risco.','Tabela de retenção (veja o inventário)','Médio');
+  S.forn.filter(f=>f.nome && f.contrato!=='sim').forEach((f,i)=>add('forn-'+i+'-'+f.nome,'media',`Revisar contrato com ${f.nome}`,'Contrato deve prever confidencialidade, segurança, incidentes e proteção de dados.','Contrato ou aditivo com cláusulas LGPD','Médio'));
+  if(pend(s.treinamento)) add('trein','cont','Treinamento curto sobre golpes e envio indevido de dados','Pessoas são a primeira linha de defesa.','Lista de presença / conclusão');
+  add('inv','cont','Revisar o inventário de dados uma vez por ano','A operação muda; o registro precisa acompanhar.','Inventário com data de revisão');
+  add('forn-rev','cont','Atualizar o cadastro de fornecedores a cada 6 meses','Novos parceiros podem receber dados pessoais.','Lista de fornecedores atualizada');
+  const ord = {alta:0,media:1,cont:2};
+  return T.sort((a,b)=>ord[a.prio]-ord[b.prio]);
+}
+
+function maturidade(){
+  const itens = [...SEG.map(x=>S.seg[x.id]), S.diag.canal, S.diag.aviso, S.diag.focal, S.diag.descarte];
+  const resp = itens.filter(Boolean).length;
+  const pts = itens.reduce((a,v)=>a+(v==='sim'?1:v==='parcial'?.5:0),0);
+  const fornOk = S.forn.filter(f=>f.nome&&f.contrato==='sim').length, fornT = S.forn.filter(f=>f.nome).length;
+  const total = itens.length + fornT, got = pts + fornOk;
+  const pct = total? Math.round(got/total*100):0;
+  const nivel = pct<35?'Inicial':pct<70?'Em desenvolvimento':'Estruturado';
+  return {pct, nivel, impl: itens.filter(v=>v==='sim').length + fornOk, total, resp};
+}
+
+/* ============ Documentos ============ */
+function docAviso(){
+  const ops = inventario(), p=S.perfil, hoje=new Date().toLocaleDateString('pt-BR');
+  const lista = ops.length? ops.map(o=>`• ${o.op}: coletamos ${o.dados.toLowerCase()} para ${o.fin.toLowerCase()}.`).join('\n') : '• [Complete o diagnóstico para listar os tratamentos]';
+  const comp = [...new Set(S.forn.filter(f=>f.nome).map(f=>f.tipo.toLowerCase()))];
+  return `AVISO DE PRIVACIDADE — ${nomeEmp().toUpperCase()}
+Versão de ${hoje}
+
+A ${nomeEmp()} respeita a sua privacidade. Este aviso explica, de forma simples, quais dados pessoais usamos, por que usamos e como você pode exercer seus direitos, conforme a Lei Geral de Proteção de Dados (Lei nº 13.709/2018).
+
+1. QUAIS DADOS USAMOS E POR QUÊ
+${lista}
+
+2. COM QUEM COMPARTILHAMOS
+Compartilhamos dados apenas quando necessário${comp.length? ', com parceiros como: '+comp.join(', '):''}. Esses parceiros devem proteger seus dados e usá-los só para a finalidade combinada.
+
+3. POR QUANTO TEMPO GUARDAMOS
+Guardamos os dados somente pelo tempo necessário para cada finalidade ou pelo prazo exigido por lei (por exemplo, documentos fiscais).
+
+4. COMO PROTEGEMOS
+Adotamos medidas de segurança proporcionais ao nosso porte, como controle de acesso, senhas fortes e cópias de segurança.
+
+5. SEUS DIREITOS
+Você pode pedir confirmação, acesso, correção, exclusão ou informações sobre o compartilhamento dos seus dados, e pode retirar seu consentimento para receber promoções a qualquer momento.
+
+6. FALE CONOSCO
+Canal de privacidade: [e-mail ou WhatsApp de contato]
+Responsável: [nome do ponto focal de privacidade]
+Atendimento pelos canais: ${p.canais.length? p.canais.join(', '):'[canais de atendimento]'}
+
+Este texto é um rascunho orientativo gerado pela LGPDFácil. Revise antes de publicar.`;
+}
+
+function docSeguranca(){
+  const st = id => ({sim:'Implementado', parcial:'Parcial — concluir', nao:'Pendente'}[S.seg[id]]||'Não avaliado');
+  return `POLÍTICA SIMPLIFICADA DE SEGURANÇA DA INFORMAÇÃO — ${nomeEmp().toUpperCase()}
+(Arts. 12 e 13 da Resolução CD/ANPD nº 2/2022)
+
+1. OBJETIVO
+Definir medidas mínimas, proporcionais ao porte da ${nomeEmp()}, para proteger os dados pessoais de clientes, funcionários e parceiros.
+
+2. RESPONSÁVEL
+Ponto focal de privacidade e segurança: [nome]. Responsável por manter esta política e acompanhar as tarefas do plano de ação.
+
+3. REGRAS ESSENCIAIS
+a) Controle de acesso — cada pessoa acessa apenas os dados de que precisa para trabalhar. Acessos são revistos quando alguém entra ou sai da equipe. [Situação: ${st('acesso')}]
+b) Senhas e 2FA — senhas individuais e fortes; verificação em duas etapas em e-mail, banco, sistemas e redes sociais. Senhas não são compartilhadas. [Situação: ${st('2fa')}]
+c) Atualizações e antivírus — computadores e celulares de trabalho com atualizações automáticas e antivírus ativo. [Situação: ${st('atualizacao')}]
+d) Backup — cópia dos dados importantes pelo menos semanalmente, guardada separada do equipamento principal, com teste de recuperação a cada 3 meses. [Situação: ${st('backup')}]
+e) Conscientização — a equipe recebe orientação sobre golpes, phishing e envio indevido de dados ao menos uma vez por ano. [Situação: ${st('treinamento')}]
+f) Fornecedores — parceiros que acessam dados pessoais devem ter contrato com cláusulas de confidencialidade e segurança.
+g) Descarte — papéis com dados pessoais são triturados; arquivos digitais são apagados quando não forem mais necessários.
+
+4. INCIDENTES
+Qualquer suspeita de vazamento, perda ou acesso indevido deve ser comunicada imediatamente ao responsável, que avaliará a necessidade de comunicar a ANPD e os titulares.
+
+5. REVISÃO
+Esta política é revisada uma vez por ano ou quando houver mudança relevante na operação.
+
+Rascunho orientativo gerado pela LGPDFácil. Não substitui análise especializada.`;
+}
+
+/* ============ Render ============ */
+const app = document.getElementById('app');
+function go(i){ S.step=i; if(i>0 && !S.start) S.start=Date.now(); if(i===6 && !S.firstPlanAt && S.start) S.firstPlanAt=Date.now(); save(); render(); window.scrollTo({top:0,behavior:'smooth'}); }
+
+function renderSteps(){
+  const el = document.getElementById('steps');
+  const mins = S.start ? Math.max(1,Math.round(((S.firstPlanAt||Date.now())-S.start)/60000)) : null;
+  el.innerHTML = STEPS.map((s,i)=>`<button class="${i===S.step?'on':''} ${i<S.step?'done':''}" data-go="${i}"><span class="n">${i<S.step?'✓':i}</span><span class="lbl">${s.lbl}</span></button>`).join('')
+    + (mins? `<div class="timer">⏱ ${S.firstPlanAt?'Plano gerado em':'Tempo de diagnóstico:'} ${mins} min</div>`:'');
+}
+
+function nav(prev,next,nextLbl='Continuar'){
+  return `<div class="actions">${prev!==null?`<button data-go="${prev}">← Voltar</button>`:'<span></span>'}${next!==null?`<button class="pri" data-go="${next}">${nextLbl} →</button>`:''}</div>`;
+}
+const segBtns = (path,val,opts=[['sim','Sim'],['nao','Não']]) => `<div class="seg">${opts.map(([v,l])=>`<button data-set="${path}" data-val="${v}" class="${val===v?'on':''} ${v==='nao'?'no':''} ${v==='parcial'?'part':''}">${l}</button>`).join('')}</div>`;
+
+const V = {
+inicio(){
+  return `<div class="card"><div class="hero"><div>
+    <h1>Saiba o que fazer primeiro na LGPD — sem jurídico, sem DPO.</h1>
+    <p class="sub">Em cerca de 15 minutos, a LGPDFácil verifica se sua empresa se enquadra como agente de pequeno porte, faz perguntas em linguagem simples e entrega um plano de ação priorizado por risco, com documentos essenciais prontos para revisar.</p>
+    <div class="flow"><span>Enquadrar</span><span>Diagnosticar</span><span>Mapear</span><span>Proteger</span><span>Documentar</span><span>Priorizar</span><span>Acompanhar</span></div>
+    <button class="pri" data-go="1">Começar diagnóstico →</button>
+    <button class="ghost" id="btnDemo2">Ver com dados de exemplo</button>
+  </div><div class="callout"><b>O que você recebe no final</b>
+    Relatório de enquadramento · Inventário simplificado (ROPA) · Mapa de bases legais · Checklist de segurança · Mapa de fornecedores · Plano de ação priorizado · Aviso de privacidade · Política simplificada de segurança
+  </div></div></div>
+  <div class="card"><h2>Três pilares</h2><div class="pillars">
+    <div class="pillar"><b>Governança e transparência</b><p>Aviso de privacidade, canal do titular, ponto focal e políticas essenciais.</p></div>
+    <div class="pillar"><b>Segurança mínima viável</b><p>Checklist de controles básicos da ANPD convertido em tarefas e evidências.</p></div>
+    <div class="pillar"><b>Operações e fornecedores</b><p>Inventário de dados, bases legais e contratos com terceiros.</p></div>
+  </div></div>`;
+},
+perfil(){
+  const p=S.perfil;
+  return `<div class="card"><h2>1. Perfil da empresa</h2><p class="sub">Coletamos só o necessário para personalizar o diagnóstico.</p>
+  <div class="row"><div><label class="f">Nome da empresa</label><input type="text" data-in="perfil.nome" value="${esc(p.nome)}" placeholder="Ex.: Padaria Pão Quente"></div>
+  <div><label class="f">Setor</label><select data-in="perfil.setor">${['','Comércio / varejo','Alimentação','Serviços','Saúde e bem-estar','Educação','Tecnologia','Indústria','Outro'].map(o=>`<option ${p.setor===o?'selected':''} value="${o}">${o||'Selecione…'}</option>`).join('')}</select></div></div>
+  <div class="row"><div><label class="f">Número de colaboradores</label><input type="number" min="0" data-in="perfil.colab" value="${esc(p.colab)}"></div>
+  <div><label class="f">Sistemas que usa</label><input type="text" data-in="perfil.sistemas" value="${esc(p.sistemas)}" placeholder="Ex.: PDV, planilhas, Google Drive"></div></div>
+  <label class="f">Canais de atendimento</label>
+  <div class="chips">${CANAIS.map(c=>`<span class="chip ${p.canais.includes(c)?'on':''}" data-chip="perfil.canais" data-val="${esc(c)}">${c}</span>`).join('')}</div>
+  ${nav(0,2)}</div>`;
+},
+enq(){
+  const e=S.enq, r=enquadramento();
+  const portes=[['me','Microempresa (ME/MEI)'],['epp','Empresa de pequeno porte (EPP)'],['startup','Startup'],['pf','Pessoa física / ente sem personalidade jurídica'],['outro','Média ou grande empresa']];
+  let res='';
+  if(r.status==='sim') res=`<div class="callout ok"><b>Provável enquadramento como agente de pequeno porte</b>Sua empresa parece poder usar o tratamento simplificado da Resolução CD/ANPD nº 2/2022: registro simplificado das operações (art. 9º), dispensa de encarregado com canal ao titular (art. 11) e política de segurança simplificada (arts. 12 e 13).</div>`;
+  if(r.status==='atencao') res=`<div class="callout warn"><b>Provável enquadramento, com pontos de atenção</b>Há critérios específicos de risco marcados, mas sem critério geral (larga escala ou impacto significativo). O enquadramento se mantém, porém esses tratamentos entram com prioridade no plano.</div>`;
+  if(r.status==='nao') res=`<div class="callout bad"><b>Tratamento diferenciado provavelmente não se aplica</b>${r.motivos.map(m=>'• '+m).join('<br>')}<br><br>Você ainda pode usar a LGPDFácil para organizar a adequação, mas recomendamos <b>análise especializada</b>.</div>`;
+  return `<div class="card"><h2>2. Teste de enquadramento</h2><p class="sub">Nem toda PME recebe automaticamente o tratamento diferenciado. Vamos verificar.</p>
+  <label class="f">Qual é o porte da empresa?</label>
+  <div class="chips">${portes.map(([v,l])=>`<span class="chip ${e.porte===v?'on':''}" data-radio="enq.porte" data-val="${v}">${l}</span>`).join('')}</div>
+  <div class="q" style="margin-top:16px"><div class="t">A receita bruta anual ultrapassa o limite do seu porte?</div><div class="h">ME até R$ 360 mil · EPP até R$ 4,8 milhões · Startup até R$ 16 milhões (LC 182/2021).</div>${segBtns('enq.receita',e.receita)}</div>
+  <div class="q"><div class="t">A empresa faz parte de um grupo econômico cuja receita total ultrapassa esses limites?</div><div class="h">Ex.: várias empresas dos mesmos sócios somadas.</div>${segBtns('enq.grupo',e.grupo)}</div>
+  <h3>Sinais de alto risco</h3>
+  <div class="q"><div class="t">Você trata dados de muitas pessoas (larga escala)?</div><div class="h">Ex.: milhares de clientes cadastrados, base de uma cidade inteira.</div>${segBtns('enq.larga',e.larga)}</div>
+  <div class="q"><div class="t">O uso desses dados pode afetar significativamente direitos das pessoas?</div><div class="h">Ex.: negar crédito, emprego ou acesso a serviço; causar dano financeiro ou moral.</div>${segBtns('enq.afeta',e.afeta)}</div>
+  <label class="f">Marque o que se aplica ao seu negócio (critérios específicos):</label>
+  <div class="chips">${CRIT_ESPECIFICOS.map(c=>`<span class="chip ${e.crit.includes(c.id)?'on':''}" data-chip="enq.crit" data-val="${c.id}">${c.t}</span>`).join('')}</div>
+  ${res}
+  ${nav(1,3)}</div>`;
+},
+diag(){
+  const n = DIAG.filter(q=>S.diag[q.id]).length;
+  return `<div class="card"><h2>3. Diagnóstico em linguagem simples</h2><p class="sub">Responda como funciona hoje. ${n} de ${DIAG.length} respondidas.</p>
+  <div class="bar" style="margin:-8px 0 16px"><i style="width:${n/DIAG.length*100}%"></i></div>
+  ${DIAG.map(q=>`<div class="q"><div class="t">${q.t}</div><div class="h">${q.h}</div>${segBtns('diag.'+q.id,S.diag[q.id])}</div>`).join('')}
+  ${nav(2,4)}</div>`;
+},
+seg(){
+  return `<div class="card"><h2>4. Segurança mínima</h2><p class="sub">Checklist baseado no Guia de Segurança da ANPD para agentes de pequeno porte. Não é “segurança completa” — é o essencial.</p>
+  ${SEG.map(x=>`<div class="q"><div class="t">${x.t}</div><div class="h">${x.q}</div>${segBtns('seg.'+x.id,S.seg[x.id],[['sim','Sim'],['parcial','Em parte'],['nao','Não']])}</div>`).join('')}
+  ${nav(3,5)}</div>`;
+},
+forn(){
+  if(!S.forn.length) S.forn=[{nome:'',tipo:'Contabilidade',contrato:''}];
+  return `<div class="card"><h2>5. Fornecedores e contratos</h2><p class="sub">Quais empresas recebem ou acessam dados pessoais do seu negócio?</p>
+  <div class="forn muted" style="font-size:12px;font-weight:700;text-transform:uppercase"><span>Fornecedor</span><span>Tipo</span><span>Contrato com cláusula de dados?</span><span></span></div>
+  ${S.forn.map((f,i)=>`<div class="forn">
+    <input type="text" data-in="forn.${i}.nome" value="${esc(f.nome)}" placeholder="Nome do fornecedor">
+    <select data-in="forn.${i}.tipo">${TIPOS_FORN.map(t=>`<option ${f.tipo===t?'selected':''}>${t}</option>`).join('')}</select>
+    <select data-in="forn.${i}.contrato">${[['','Selecione…'],['sim','Sim'],['nao','Não'],['naosei','Não sei']].map(([v,l])=>`<option value="${v}" ${f.contrato===v?'selected':''}>${l}</option>`).join('')}</select>
+    <button class="sm" data-delforn="${i}" title="Remover">✕</button></div>`).join('')}
+  <button class="sm" id="addForn">+ Adicionar fornecedor</button>
+  <div class="callout" style="margin-top:16px"><b>Dica</b>Pense em contabilidade, sistema de vendas, suporte de TI, agência de marketing, armazenamento em nuvem e operadora de benefícios.</div>
+  ${nav(4,6,'Gerar plano de ação')}</div>`;
+},
+res(){
+  const enq=enquadramento(), ops=inventario(), T=tarefas(), M=maturidade();
+  const pendAlta=T.filter(t=>t.prio==='alta'&&!S.plano[t.id]?.done).length;
+  const feitas=T.filter(t=>S.plano[t.id]?.done).length;
+  const esc_ = ops.filter(o=>o.esc);
+  const lbl={alta:['Alta','b-alta'],media:['Média','b-media'],cont:['Contínua','b-cont']};
+  const enqTxt={sim:['Provável pequeno porte','b-ok'],atencao:['Pequeno porte, com atenção','b-media'],nao:['Fora do regime simplificado','b-alta'],pendente:['Incompleto','b-cont']}[enq.status];
+  const tab=S.tab;
+  const tabBtn=(id,l)=>`<button data-tab="${id}" class="${tab===id?'on':''}">${l}</button>`;
+  const pane=(id,html)=>`<div class="tabpane" style="display:${tab===id?'block':'none'}">${html}</div>`;
+  const mins = S.start&&S.firstPlanAt? Math.max(1,Math.round((S.firstPlanAt-S.start)/60000)) : null;
+  return `<div class="card">
+    <div class="print-only"><h1>LGPDFácil — Relatório de ${esc(nomeEmp())}</h1><p class="muted">Gerado em ${new Date().toLocaleDateString('pt-BR')}</p></div>
+    <h2>Painel de ${esc(nomeEmp())}</h2>
+    <p class="sub">Progresso e pendências — sem “selo de conformidade”. ${mins?`Diagnóstico concluído em ${mins} min.`:''}</p>
+    <div class="kpis">
+      <div class="kpi"><div class="v">${M.nivel}</div><div class="l">Nível de maturidade</div><div class="bar"><i style="width:${M.pct}%"></i></div></div>
+      <div class="kpi"><div class="v">${M.impl}/${M.total}</div><div class="l">Controles implementados</div></div>
+      <div class="kpi"><div class="v" style="color:var(--alta)">${pendAlta}</div><div class="l">Pendências de prioridade alta</div></div>
+      <div class="kpi"><div class="v">${ops.length}</div><div class="l">Operações de dados mapeadas</div></div>
+    </div>
+    <p class="muted" style="font-size:13px;margin:10px 0 0">Enquadramento: <span class="badge ${enqTxt[1]}">${enqTxt[0]}</span> · Ações concluídas: ${feitas} de ${T.length}</p>
+    ${(enq.status==='nao'||esc_.length)?`<div class="callout bad"><b>Recomendamos análise especializada</b>${enq.status==='nao'?'O teste de enquadramento indicou que o regime simplificado provavelmente não se aplica. ':''}${esc_.length?'Foram identificados tratamentos que exigem revisão profissional: '+esc_.map(o=>o.op.toLowerCase()).join(', ')+'.':''}</div>`:''}
+  </div>
+  <div class="card">
+    <div class="tabs no-print">${tabBtn('plano','Plano de ação')}${tabBtn('inv','Inventário e bases legais')}${tabBtn('forn','Fornecedores')}${tabBtn('docs','Documentos')}${tabBtn('enq','Relatório de enquadramento')}</div>
+    ${pane('plano',`<h3 class="print-only">Plano de ação</h3><div class="tbl"><table><thead><tr><th></th><th>Prioridade</th><th>Tarefa</th><th>Esforço</th><th>Responsável</th><th>Prazo</th></tr></thead><tbody>
+      ${T.map(t=>{const p=S.plano[t.id]||{};return `<tr><td><input type="checkbox" data-done="${esc(t.id)}" ${p.done?'checked':''} aria-label="Concluída"></td>
+      <td><span class="badge ${lbl[t.prio][1]}">${lbl[t.prio][0]}</span></td>
+      <td class="${p.done?'done':''}"><b>${esc(t.titulo)}</b><div class="muted" style="font-size:13px">${t.porque}<br>Evidência: ${t.evid}</div></td>
+      <td>${t.esforco}</td>
+      <td><input type="text" data-plan="${esc(t.id)}.resp" value="${esc(p.resp||'')}" placeholder="Quem?"></td>
+      <td><input type="date" data-plan="${esc(t.id)}.prazo" value="${esc(p.prazo||'')}"></td></tr>`}).join('')}
+    </tbody></table></div>`)}
+    ${pane('inv',`<h3 class="print-only">Inventário simplificado (ROPA) e bases legais</h3>${ops.length?`<div class="tbl"><table><thead><tr><th>Operação</th><th>Titulares</th><th>Dados</th><th>Finalidade</th><th>Base legal (orientativa)</th><th>Compartilhamento</th><th>Retenção</th></tr></thead><tbody>
+      ${ops.map(o=>`<tr><td><b>${o.op}</b>${o.rev?'<br><span class="badge b-rev">Revisar</span>':''}</td><td>${o.tit}</td><td>${o.dados}</td><td>${o.fin}</td><td>${o.base}</td><td>${o.comp}</td><td>${o.ret}</td></tr>`).join('')}
+      </tbody></table></div><p class="muted" style="font-size:13px">A indicação de base legal é orientativa e não constitui parecer jurídico. Itens marcados “Revisar” merecem confirmação profissional.</p>`:'<p class="muted">Responda o diagnóstico para gerar o inventário.</p>'}`)}
+    ${pane('forn',`<h3 class="print-only">Mapa de fornecedores</h3>${S.forn.filter(f=>f.nome).length?`<table><thead><tr><th>Fornecedor</th><th>Tipo</th><th>Status contratual</th></tr></thead><tbody>
+      ${S.forn.filter(f=>f.nome).map(f=>`<tr><td>${esc(f.nome)}</td><td>${esc(f.tipo)}</td><td>${f.contrato==='sim'?'<span class="badge b-ok">Com cláusula LGPD</span>':f.contrato==='nao'?'<span class="badge b-alta">Sem cláusula — revisar</span>':'<span class="badge b-media">Verificar contrato</span>'}</td></tr>`).join('')}
+      </tbody></table><h3>Checklist contratual</h3><p class="muted">Confidencialidade · Uso dos dados só para a finalidade contratada · Medidas de segurança · Aviso de incidentes em prazo curto · Devolução/eliminação ao fim do contrato · Responsabilidades de cada parte.</p>`:'<p class="muted">Nenhum fornecedor cadastrado.</p>'}`)}
+    ${pane('docs',`<h3>Aviso de privacidade</h3><div class="no-print" style="margin-bottom:8px"><button class="sm" data-copy="aviso">Copiar texto</button></div><div class="doc" id="doc-aviso">${esc(docAviso())}</div>
+      <h3>Política simplificada de segurança</h3><div class="no-print" style="margin-bottom:8px"><button class="sm" data-copy="seg">Copiar texto</button></div><div class="doc" id="doc-seg">${esc(docSeguranca())}</div>`)}
+    ${pane('enq',`<h3 class="print-only">Relatório de enquadramento</h3><p><b>Resultado:</b> <span class="badge ${enqTxt[1]}">${enqTxt[0]}</span></p>
+      <p><b>Premissas informadas:</b> porte “${({me:'Microempresa',epp:'EPP',startup:'Startup',pf:'Pessoa física/ente despersonalizado',outro:'Média/grande'})[S.enq.porte]||'—'}”; receita acima do limite: ${S.enq.receita||'—'}; grupo econômico acima do limite: ${S.enq.grupo||'—'}; larga escala: ${S.enq.larga||'—'}; impacto significativo: ${S.enq.afeta||'—'}; critérios específicos: ${S.enq.crit.length?S.enq.crit.map(c=>CRIT_ESPECIFICOS.find(x=>x.id===c).t.split(' (')[0]).join('; '):'nenhum'}.</p>
+      ${enq.motivos.length?`<p><b>Alertas:</b><br>${enq.motivos.map(m=>'• '+m).join('<br>')}</p>`:''}
+      <p class="muted" style="font-size:13px">Base: Resolução CD/ANPD nº 2/2022, arts. 2º a 4º, com alterações da Resolução CD/ANPD nº 15/2024. As respostas são declaradas pelo cliente e registradas como premissas.</p>`)}
+  </div>
+  <div class="card no-print"><h2>Exportar e acompanhar</h2>
+    <p class="sub">Salve o relatório completo (plano, inventário, fornecedores, documentos e enquadramento) em PDF.</p>
+    <button class="pri" id="btnPrint">Exportar relatório (PDF)</button><p class="muted" id="printMsg" style="font-size:13px"></p>
+    <h3>Este plano foi útil para você?</h3>
+    <div class="stars">${[1,2,3,4,5].map(n=>`<button data-star="${n}" class="${S.nota>=n?'on':''}" aria-label="${n} estrelas">★</button>`).join('')}</div>
+    <label class="f">O que faltou ou o que justificaria pagar por um acompanhamento mensal?</label>
+    <textarea data-in="comentario" placeholder="Sua resposta ajuda a validar o produto">${esc(S.comentario)}</textarea>
+    ${S.nota?'<p class="muted">Obrigado! Resposta registrada neste navegador.</p>':''}
+  </div>
+  ${nav(5,null)}`;
+}
+};
+
+function render(){ renderSteps(); app.innerHTML = V[STEPS[S.step].id](); }
+
+/* ============ Eventos ============ */
+function setPath(path,val){
+  const k=path.split('.'); let o=S;
+  for(let i=0;i<k.length-1;i++){ o = o[k[i]] ??= {}; }
+  o[k[k.length-1]] = val;
+}
+function getPath(path){ return path.split('.').reduce((o,k)=>o?.[k], S); }
+
+document.addEventListener('click', ev=>{
+  const t = ev.target.closest('button,.chip,input[type=checkbox]'); if(!t) return;
+  if(t.dataset.go!==undefined){ go(+t.dataset.go); return; }
+  if(t.dataset.set){ setPath(t.dataset.set, t.dataset.val); save(); render(); return; }
+  if(t.dataset.radio){ setPath(t.dataset.radio, t.dataset.val); save(); render(); return; }
+  if(t.dataset.chip){ const arr=getPath(t.dataset.chip); const v=t.dataset.val; const i=arr.indexOf(v); i>=0?arr.splice(i,1):arr.push(v); save(); render(); return; }
+  if(t.dataset.tab){ S.tab=t.dataset.tab; save(); render(); return; }
+  if(t.dataset.done!==undefined){ const id=t.dataset.done; (S.plano[id] ??= {}).done=t.checked; save(); render(); return; }
+  if(t.dataset.delforn!==undefined){ S.forn.splice(+t.dataset.delforn,1); save(); render(); return; }
+  if(t.dataset.star){ S.nota=+t.dataset.star; save(); render(); return; }
+  if(t.dataset.copy){ const txt = t.dataset.copy==='aviso'?docAviso():docSeguranca(); navigator.clipboard?.writeText(txt).then(()=>{t.textContent='Copiado ✓'; setTimeout(()=>t.textContent='Copiar texto',1500);}).catch(()=>{}); return; }
+  if(t.id==='addForn'){ S.forn.push({nome:'',tipo:'Contabilidade',contrato:''}); save(); render(); return; }
+  if(t.id==='btnPrint'){ try{ window.print(); }catch(e){} const m=document.getElementById('printMsg'); if(m) m.textContent='Se a impressão não abrir, use Ctrl+P (ou Compartilhar → Imprimir no celular) para salvar em PDF.'; return; }
+  if(t.id==='btnDemo'||t.id==='btnDemo2'){ demo(); return; }
+  if(t.id==='btnReset'){ if(t.dataset.arm){ S=blank(); save(); t.textContent='Recomeçar'; delete t.dataset.arm; render(); } else { t.dataset.arm='1'; t.textContent='Clique de novo para apagar'; setTimeout(()=>{ if(t.dataset.arm){ delete t.dataset.arm; t.textContent='Recomeçar'; } },3000); } return; }
+});
+document.addEventListener('input', ev=>{
+  const t=ev.target;
+  if(t.dataset.in){ setPath(t.dataset.in, t.value); save(); if(t.tagName==='SELECT') render(); return; }
+  if(t.dataset.plan){ const [id,f]=[t.dataset.plan.slice(0,t.dataset.plan.lastIndexOf('.')), t.dataset.plan.slice(t.dataset.plan.lastIndexOf('.')+1)]; (S.plano[id] ??= {})[f]=t.value; save(); }
+});
+
+function demo(){
+  S = blank();
+  Object.assign(S, {
+    perfil:{nome:'Padaria Pão Quente',setor:'Alimentação',colab:'8',canais:['Loja física','WhatsApp','Instagram/Facebook'],sistemas:'PDV, planilhas, Google Drive'},
+    enq:{porte:'me',receita:'nao',grupo:'nao',larga:'nao',afeta:'nao',crit:['vigilancia']},
+    diag:{clientes:'sim',marketing:'sim',funcionarios:'sim',criancas:'nao',cameras:'sim',sensiveis:'nao',site:'nao',canal:'nao',aviso:'nao',focal:'nao',descarte:'nao'},
+    seg:{acesso:'parcial','2fa':'nao',atualizacao:'sim',backup:'nao',treinamento:'nao'},
+    forn:[{nome:'Contabilidade Silva',tipo:'Contabilidade',contrato:'naosei'},{nome:'Sistema PDV Fácil',tipo:'Sistema de vendas / ERP',contrato:'sim'},{nome:'Agência Divulga',tipo:'Marketing / agência',contrato:'nao'}],
+    start: Date.now()-14*60000, firstPlanAt: Date.now(), step:6, tab:'plano'
+  });
+  save(); render(); window.scrollTo({top:0});
+}
+
+render();
+</script>
+</body>
+</html>
