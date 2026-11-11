@@ -83,21 +83,23 @@ python3 -m http.server 8000
 
 ## Arquitetura planejada
 
-O protótipo atual serve para validar o fluxo com usuários. A versão web do MVP está planejada como um **monólito modular**, mais simples de operar do que microsserviços nessa fase:
+O protótipo atual serve para validar o fluxo com usuários. A versão web do MVP será um **monólito modular** com o menor número de peças possível:
 
-- **Frontend:** Next.js, React, TypeScript e Tailwind CSS (web responsiva)
-- **Backend:** Python com FastAPI (regras, validações, autorização, plano de ação e relatórios)
-- **Banco e autenticação:** PostgreSQL com serviço gerenciado de autenticação
-- **Qualidade:** migrations com SQLAlchemy/Alembic, testes com Pytest e Playwright, CI no GitHub
+- **Next.js + React + TypeScript + Tailwind CSS:** telas, regras de negócio e autorização no servidor, em uma única aplicação
+- **Supabase:** PostgreSQL e autenticação, com isolamento entre empresas por Row Level Security
+- **Qualidade:** migrations da Supabase CLI, validação com Zod, testes com Vitest e Playwright, CI no GitHub
+- **Relatório:** exportado pela impressão do navegador (imprimir ou salvar em PDF), com instruções na própria página
 
-Requisitos desde o início: HTTPS, segredos fora do repositório, isolamento entre empresas (multi-tenant) no backend e no banco, controle de acesso por papel, trilha de auditoria, backups com teste de restauração, minimização de dados e boas práticas do OWASP.
+O código é dividido em módulos que seguem a jornada (identidade, enquadramento, diagnóstico, inventário, segurança, fornecedores, plano de ação, documentos, painel e auditoria). Os detalhes estão no [CLAUDE.md](CLAUDE.md).
+
+Requisitos desde o início: HTTPS, segredos fora do repositório, isolamento entre empresas no servidor e no banco, controle de acesso por papel, trilha de auditoria, backups com teste de restauração, minimização de dados e boas práticas do OWASP.
 
 ## Roadmap
 
 1. **Descoberta:** entrevistas com empresas para validar dores e linguagem.
 2. **MVP concierge:** diagnóstico e plano de ação feitos de forma assistida com empresas piloto.
 3. **Protótipo navegável:** enquadramento, diagnóstico e painel (este repositório).
-4. **MVP web:** cadastro e login, diagnóstico versionado, motor de regras, plano de ação e relatório em PDF.
+4. **MVP web:** cadastro e login, enquadramento, diagnóstico versionado, motor de regras, plano de ação e relatório para impressão.
 5. **Modelo recorrente:** assinatura com revisões periódicas e alertas.
 6. **Expansão:** canal do titular integrado, trilhas de treinamento, biblioteca contratual, integrações e apoio especializado.
 
