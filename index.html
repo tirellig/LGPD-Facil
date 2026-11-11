@@ -457,8 +457,15 @@ res(){
       <p class="muted" style="font-size:13px">Base: Resolução CD/ANPD nº 2/2022, arts. 2º a 4º, com alterações da Resolução CD/ANPD nº 15/2024. As respostas são declaradas pelo cliente e registradas como premissas.</p>`)}
   </div>
   <div class="card no-print"><h2>Exportar e acompanhar</h2>
-    <p class="sub">Salve o relatório completo (plano, inventário, fornecedores, documentos e enquadramento) em PDF.</p>
-    <button class="pri" id="btnPrint">Exportar relatório (PDF)</button><p class="muted" id="printMsg" style="font-size:13px"></p>
+    <p class="sub">Para guardar ou compartilhar o relatório completo (plano, inventário, fornecedores, documentos e enquadramento), imprima esta página ou salve em PDF pelo próprio navegador.</p>
+    <div class="callout"><b>Como imprimir ou salvar em PDF</b>
+      <ul style="margin:6px 0 6px 18px;padding:0">
+        <li><strong>Computador:</strong> clique no botão abaixo ou use Ctrl+P (Cmd+P no Mac). Em “Destino”, escolha “Salvar como PDF” ou a sua impressora.</li>
+        <li><strong>Android (Chrome):</strong> toque no menu ⋮, depois em “Compartilhar” e em “Imprimir”.</li>
+        <li><strong>iPhone (Safari):</strong> toque em Compartilhar e depois em “Imprimir”. Para gerar o PDF, toque em Compartilhar de novo na tela de impressão e escolha “Salvar em Arquivos”.</li>
+      </ul>
+      Menus, botões e avisos de navegação não aparecem na versão impressa.</div>
+    <button class="pri" id="btnPrint">Imprimir ou salvar em PDF</button><p class="muted" id="printMsg" style="font-size:13px"></p>
     <h3>Este plano foi útil para você?</h3>
     <div class="stars">${[1,2,3,4,5].map(n=>`<button data-star="${n}" class="${S.nota>=n?'on':''}" aria-label="${n} estrelas">★</button>`).join('')}</div>
     <label class="f">O que faltou ou o que justificaria pagar por um acompanhamento mensal?</label>
@@ -491,7 +498,7 @@ document.addEventListener('click', ev=>{
   if(t.dataset.star){ S.nota=+t.dataset.star; save(); render(); return; }
   if(t.dataset.copy){ const txt = t.dataset.copy==='aviso'?docAviso():docSeguranca(); navigator.clipboard?.writeText(txt).then(()=>{t.textContent='Copiado ✓'; setTimeout(()=>t.textContent='Copiar texto',1500);}).catch(()=>{}); return; }
   if(t.id==='addForn'){ S.forn.push({nome:'',tipo:'Contabilidade',contrato:''}); save(); render(); return; }
-  if(t.id==='btnPrint'){ try{ window.print(); }catch(e){} const m=document.getElementById('printMsg'); if(m) m.textContent='Se a impressão não abrir, use Ctrl+P (ou Compartilhar → Imprimir no celular) para salvar em PDF.'; return; }
+  if(t.id==='btnPrint'){ try{ window.print(); }catch(e){} const m=document.getElementById('printMsg'); if(m) m.textContent='Se a janela de impressão não abrir, siga as instruções acima.'; return; }
   if(t.id==='btnDemo'||t.id==='btnDemo2'){ demo(); return; }
   if(t.id==='btnReset'){ if(t.dataset.arm){ S=blank(); save(); t.textContent='Recomeçar'; delete t.dataset.arm; render(); } else { t.dataset.arm='1'; t.textContent='Clique de novo para apagar'; setTimeout(()=>{ if(t.dataset.arm){ delete t.dataset.arm; t.textContent='Recomeçar'; } },3000); } return; }
 });
