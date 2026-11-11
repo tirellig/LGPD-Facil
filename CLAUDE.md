@@ -45,7 +45,7 @@ Convenções ao editar o protótipo:
 
 Decisão do grupo: **somente Next.js e Supabase**, para ter o menor número de peças possível, uma única linguagem (TypeScript) e um único deploy. Ainda não implementada. Quando começar, siga esta direção:
 
-- **Next.js (App Router) + React + TypeScript + Tailwind CSS**, web responsiva (sem app nativo no MVP). Regras de negócio e autorização rodam no servidor, em Server Components, Server Actions e Route Handlers. Nada de regra de negócio só no navegador.
+- **Next.js (App Router) + React + TypeScript + Tailwind CSS + shadcn/ui**, web responsiva (sem app nativo no MVP). Regras de negócio e autorização rodam no servidor, em Server Components, Server Actions e Route Handlers. Nada de regra de negócio só no navegador.
 - **Supabase** para PostgreSQL e autenticação. Isolamento entre empresas com **Row Level Security (RLS)** em todas as tabelas que têm `empresa_id`, além da checagem no servidor. Projeto na região de São Paulo.
 - Migrations em SQL com a Supabase CLI (`supabase/migrations/`) e tipos TypeScript gerados a partir do banco.
 - Validação de entrada com Zod em toda Server Action e Route Handler.
@@ -53,6 +53,19 @@ Decisão do grupo: **somente Next.js e Supabase**, para ter o menor número de p
 - Hospedagem do Next.js na Vercel. O plano gratuito da Vercel é para uso não comercial: ao cobrar clientes, passe para um plano pago.
 - **Sem geração de PDF no servidor.** O relatório é exportado pela impressão do navegador (CSS `@media print`), e a página mostra um aviso visível explicando como imprimir ou salvar em PDF no computador e no celular.
 - Fora do MVP: pagamentos automáticos, app móvel e IA generativa.
+
+### Interface (UI/UX)
+
+Identidade **Clean Tech + Confiança**. Siga estas regras em toda tela:
+
+- **Componentes:** shadcn/ui sobre Tailwind CSS, guardados em `src/shared/ui`. Não adicione outra biblioteca de componentes ou de estilos (Material UI, CoreUI etc.).
+- **Cores** (variáveis de tema do Tailwind/shadcn): azul-marinho `#0F2747` para títulos e menu lateral; verde-azulado `#167D87` para botões e ações principais; verde-claro `#E7F4F2` para destaques e avisos; fundo `#F5F7FA`; atenção `#E9A23B` **só como cor de fundo** (etiquetas de prioridade alta), sempre com texto escuro, nunca como cor de texto.
+- **Tipografia:** Inter via `next/font`, texto entre 14 e 16 px.
+- **Formas:** botões com cantos de 10 a 12 px e área de toque confortável; cards com raio de 12 a 16 px, borda cinza suave e sombra discreta.
+- **Acessibilidade:** contraste adequado, foco visível no teclado e feedback que nunca depende só de cor (combine rótulo, ícone ou texto).
+- **Responsividade:** menu lateral no computador, menu recolhido no celular; teste toda tela em largura de celular.
+- **Experiência:** diagnóstico com uma pergunta por vez, barra de etapas, progresso salvo, ajuda contextual e opção "Não tenho certeza". Toda tela mostra o próximo passo. O painel mostra pendentes, concluídas e documentos, com a frase "progresso de tarefas, não percentual de conformidade legal".
+- **Telas do MVP, na ordem da jornada:** landing page, cadastro e login, perfil e enquadramento, diagnóstico, inventário, segurança e fornecedores, documentos, plano de ação, painel e relatório para impressão.
 
 ### Arquitetura modular (obrigatória)
 
@@ -125,4 +138,5 @@ Este repositório é **público**. Não adicione:
 
 Se a mudança alterar estrutura, stack ou convenções, atualize também as seções acima deste arquivo. Não registre aqui dados pessoais, preços ou informações internas.
 
+- 2026-11-11 · Definidas as diretrizes de interface: shadcn/ui + Tailwind, paleta Clean Tech + Confiança, tipografia, acessibilidade e telas do MVP na ordem da jornada (`CLAUDE.md`).
 - 2026-11-11 · Stack do MVP reduzida para Next.js + Supabase, arquitetura modular definida, PDF automático substituído pela impressão do navegador e criado este histórico (`CLAUDE.md`, `README.md`). Protótipo ganhou instruções visíveis de como imprimir ou salvar em PDF (`index.html`).
