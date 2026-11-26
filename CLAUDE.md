@@ -56,12 +56,13 @@ Decisão do grupo: **somente Next.js e Supabase**, para ter o menor número de p
 
 ### Interface (UI/UX)
 
-Identidade **Clean Tech + Confiança**. Siga estas regras em toda tela:
+Identidade visual **igual à do pitch** (aprovada em nov/2026). Siga estas regras em toda tela:
 
 - **Componentes:** shadcn/ui sobre Tailwind CSS, guardados em `src/shared/ui`. Não adicione outra biblioteca de componentes ou de estilos (Material UI, CoreUI etc.).
-- **Cores** (variáveis de tema do Tailwind/shadcn): azul-marinho `#0F2747` para títulos e menu lateral; verde-azulado `#167D87` para botões e ações principais; verde-claro `#E7F4F2` para destaques e avisos; fundo `#F5F7FA`; atenção `#E9A23B` **só como cor de fundo** (etiquetas de prioridade alta), sempre com texto escuro, nunca como cor de texto.
-- **Tipografia:** Inter via `next/font`, texto entre 14 e 16 px.
-- **Formas:** botões com cantos de 10 a 12 px e área de toque confortável; cards com raio de 12 a 16 px, borda cinza suave e sombra discreta.
+- **Logo:** use os arquivos de `assets/` (`logo-lgpdfacil.png` em fundo claro, `logo-lgpdfacil-branca.png` em fundo escuro, `icone-lgpdfacil.png` como favicon ou abaixo de 28 px de altura). Não recolorir, esticar nem aplicar a logo colorida sobre o azul principal.
+- **Cores** (variáveis de tema do Tailwind/shadcn): azul `#3434E0` para botões, links, etapa ativa e números-chave; marinho `#22168C` para destaques fortes e hover; menta `#7FE3A3` para sucesso, etapa concluída e botão principal sobre fundo azul; lavanda `#D3D3FF` para bordas de botões secundários e foco; fundo `#F4F4F8`; texto `#14142E` e secundário `#55557A`. Prioridades: Alta em vermelho (`#C8321E` sobre `#FDECE9`), Média em laranja (`#B25E09` sobre `#FFF2DF`), Contínua no azul da marca.
+- **Tipografia:** Inter Tight para títulos e textos (texto entre 14 e 16 px, títulos em negrito com espaçamento levemente negativo) e DM Mono para rótulos, cabeçalhos de tabela, selos e metadados. No protótipo as fontes ficam em `assets/fonts`; no Next.js, carregue as duas via `next/font`.
+- **Formas:** botões, seletores e chips em formato de pílula (cantos totalmente arredondados), com área de toque confortável; cards com raio de 12 a 16 px, borda cinza suave e sombra discreta. Blocos de destaque podem usar as formas geométricas do pitch (triângulos em marinho e menta sobre o azul).
 - **Acessibilidade:** contraste adequado, foco visível no teclado e feedback que nunca depende só de cor (combine rótulo, ícone ou texto).
 - **Responsividade:** menu lateral no computador, menu recolhido no celular; teste toda tela em largura de celular.
 - **Experiência:** diagnóstico com uma pergunta por vez, barra de etapas, progresso salvo, ajuda contextual e opção "Não tenho certeza". Toda tela mostra o próximo passo. O painel mostra pendentes, concluídas e documentos, com a frase "progresso de tarefas, não percentual de conformidade legal".
@@ -138,5 +139,6 @@ Este repositório é **público**. Não adicione:
 
 Se a mudança alterar estrutura, stack ou convenções, atualize também as seções acima deste arquivo. Não registre aqui dados pessoais, preços ou informações internas.
 
+- 2026-11-26 · Aplicada a identidade visual do pitch ao protótipo: paleta azul/marinho/menta, fontes Inter Tight e DM Mono hospedadas no repositório, logo oficial no cabeçalho, no relatório impresso e como favicon, e bloco de abertura no estilo dos slides. Diretrizes de interface atualizadas para a nova identidade (`index.html`, `assets/`, `CLAUDE.md`).
 - 2026-11-11 · Definidas as diretrizes de interface: shadcn/ui + Tailwind, paleta Clean Tech + Confiança, tipografia, acessibilidade e telas do MVP na ordem da jornada (`CLAUDE.md`).
 - 2026-11-11 · Stack do MVP reduzida para Next.js + Supabase, arquitetura modular definida, PDF automático substituído pela impressão do navegador e criado este histórico (`CLAUDE.md`, `README.md`). Protótipo ganhou instruções visíveis de como imprimir ou salvar em PDF (`index.html`).

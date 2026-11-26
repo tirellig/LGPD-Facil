@@ -1,0 +1,5 @@
+Fontes da identidade visual da LGPDFácil (as mesmas do pitch):
+- Inter Tight (variável, pesos 400 a 700) — https://fonts.google.com/specimen/Inter+Tight
+- DM Mono (400 e 500) — https://fonts.google.com/specimen/DM+Mono
+Ambas sob a SIL Open Font License 1.1 (https://openfontlicense.org).
+Hospedadas aqui (subconjunto latino) para o app não depender do Google Fonts nem enviar dados de navegação a terceiros.
